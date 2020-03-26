@@ -1,0 +1,73 @@
+import psutil
+import os
+import time
+
+class Stats():
+
+	def __init__(self):
+		print("[INFO] SYSTEM MONITOR INITIALIZING")
+
+	def cpu_stats(self):
+
+		while True:
+			os.system('clear')
+			core_count = psutil.cpu_count(logical=True)
+			load_avg = os.getloadavg()
+
+			print('''
+			8===D 8===D CPU STATS 8===D 8===D
+			Total Cores: {0}
+			Load Average: 1 min: {1} || 5 min: {2} || 15 min: {3}
+			'''.format(core_count, load_avg[0], load_avg[1], load_avg[2]))
+
+			time.sleep(1)
+
+		#raise NotImplementedError
+
+	def ram_stats(self):
+
+		print(psutil.virtual_memory())
+		print(psutil.swap_memory())
+
+		raise NotImplementedError
+
+	def misc_stats(self):
+		print(psutil.sensors_temperatures(fahrenheit=True))
+		print(psutil.boot_time())
+		fans = psutil.sensors_fans()
+		batt = psutil.sensors_battery()
+
+		if fans == {}:
+			print('[WARN] No fan speed data')
+
+		if batt == None:
+			print('[WARN] No battery data')
+
+		raise NotImplementedError
+		
+#implement stats class
+
+#hook UI up to stats class
+
+#implement menu
+
+if __name__ in '__main__':
+
+	stats = Stats()
+	close = False
+	legal_actions = {
+		'cpu': stats.cpu_stats,
+		'ram': stats.ram_stats,
+		'misc': stats.misc_stats
+	}
+
+	while not close:
+		argument = input ('> ')
+		print(argument)
+
+		if "exit" in argument:
+			close = True
+		else:
+			for action in legal_actions:
+				if argument in action:
+					legal_actions[action]()
